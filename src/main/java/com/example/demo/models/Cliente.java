@@ -55,7 +55,7 @@ public class Cliente {
 	}
 
 	public ArrayList<Venta> getVentas() {
-		return ventas;
+		return null;
 	}
 
 	
