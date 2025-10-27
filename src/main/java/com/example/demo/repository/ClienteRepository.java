@@ -7,5 +7,5 @@ import com.example.demo.models.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, String> {
-	
+	Cliente findByDocumento(String documento);
 }
