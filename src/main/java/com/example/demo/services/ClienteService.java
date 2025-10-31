@@ -1,49 +1,56 @@
 package com.example.demo.services;
 
-import java.util.ArrayList;
+
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.models.Cliente;
 import com.example.demo.repository.ClienteRepository;
 
-@Repository
+@Service
 public class ClienteService {
-	
-	@Autowired
-	ClienteRepository clienteRepository;
-	
-	public Cliente getCliente(String documento) {
-		return clienteRepository.findByDocumento(documento);
-	}
 
-	public boolean removeCliente(String documento) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Autowired
+    private ClienteRepository clienteRepository;
 
-	public ArrayList<Cliente> listarClientes() {
-		return (ArrayList<Cliente>) clienteRepository.findAll();
-	}
+    public List<Cliente> listarClientes() {
+        return clienteRepository.findAll();
+    }
 
-	public Cliente saveCliente(Cliente clienteNew) {
-		
-        Cliente cliente = clienteRepository.findByDocumento(clienteNew.getDocumento());
-        
-        if (cliente != null) {
-            cliente.setNombre(clienteNew.getNombre());
-            cliente.setDocumento(clienteNew.getDocumento());
-            cliente.setFecha_naciemiento(clienteNew.getFecha_naciemiento());
-            cliente.setEmail(clienteNew.getEmail());
-            return clienteRepository.save(cliente);
+    public Optional<Cliente> obtenerClientePorDocumento(String documento) {
+        return clienteRepository.findById(documento);
+    }
+
+    
+    public Cliente crearCliente(Cliente cliente) {
+        // validar si existe el documento
+        if (clienteRepository.existsById(cliente.getDocumento())) {
+            throw new RuntimeException("Ya existe un cliente con documento: " + cliente.getDocumento());
         }
-        // Si no existe, lo crea
+        
         return clienteRepository.save(cliente);
-	}
+    }
 
-	public Cliente updateCliente(String documento, Cliente cliente) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Cliente actualizarCliente(String documento, Cliente datos) {
+        return clienteRepository.findById(documento).map(c -> {
+            c.setNombre(datos.getNombre());
+            c.setFechaNacimiento(datos.getFechaNacimiento());
+            c.setEmail(datos.getEmail());
+            return clienteRepository.save(c);
+        }).orElseThrow(() -> new RuntimeException("Cliente no encontrado: " + documento));
+    }
+
+    public boolean eliminarCliente(String documento) {
+        try {
+            clienteRepository.deleteById(documento);
+            return true; 
+        } catch (EmptyResultDataAccessException ex) {
+            return false; 
+        }
+    }
 }

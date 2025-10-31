@@ -1,9 +1,13 @@
 package com.example.demo.models;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -13,14 +17,17 @@ import lombok.Data;
 @Entity
 public class Cliente {
 	
-	@Id
-	private String documento;
-	
-	private String nombre;
-	
-	private Date fecha_naciemiento;
-	
-	private String email;
+
+    @Id
+    private String documento;        
+
+    private String nombre;
+
+    @Column(name = "fecha_nacimiento")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechaNacimiento;   // DATE
+
+    private String email;
 
 	public String getDocumento() {
 		return documento;
@@ -38,12 +45,12 @@ public class Cliente {
 		this.nombre = nombre;
 	}
 
-	public Date getFecha_naciemiento() {
-		return fecha_naciemiento;
+	public LocalDate getFechaNacimiento() {
+		return fechaNacimiento;
 	}
 
-	public void setFecha_naciemiento(Date fecha_naciemiento) {
-		this.fecha_naciemiento = fecha_naciemiento;
+	public void setFechaNacimiento(LocalDate fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
 	}
 
 	public String getEmail() {
@@ -52,12 +59,7 @@ public class Cliente {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public ArrayList<Venta> getVentas() {
-		return null;
-	}
-
+	}	
 	
-	
+    
 }

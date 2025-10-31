@@ -4,25 +4,25 @@ import java.util.List;
 
 public class VentaRequestDTO {
 	
-	private String documento;
+	private String documento; 
 	
-	private List<Producto_Venta> detalle;
+    private List<ProductoDetalleDTO> detalle;
 
-	public void setDocumento(String documento) {
-		this.documento = documento;
-	}
+    // Getters y setters
 
-	public List<Producto_Venta> getDetalle() {
-		return detalle;
-	}
+    public String getDocumento() {
+        return documento;
+    }
 
-	public void setDetalle(List<Producto_Venta> detalle) {
-		this.detalle = detalle;
-	}
+    public void setDocumento(String documento) {
+        this.documento = documento;
+    }
 
-	public String getDocumento() {
-		return documento;
-	}
-	
-	
+    public List<ProductoDetalleDTO> getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(List<ProductoDetalleDTO> detalle) {
+        this.detalle = detalle;
+    }
 }

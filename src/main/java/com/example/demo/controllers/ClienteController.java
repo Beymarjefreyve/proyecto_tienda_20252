@@ -1,8 +1,10 @@
 package com.example.demo.controllers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,42 +21,36 @@ import com.example.demo.services.ClienteService;
 @RequestMapping("/clientes")
 public class ClienteController {
 
-	@Autowired
-	ClienteService clienteService;
-	
-	@GetMapping("/{documento}")
-	public Cliente getCliente(@PathVariable String documento) {
-		return clienteService.getCliente(documento);
-	}
-	
-	@DeleteMapping("/{documento}")
-    public String eliminarCliente(@PathVariable String documento) {
-        
-		Cliente cliente = this.getCliente(documento);
-		
-		if(clienteService.removeCliente(documento)) {
-        	return "Se eliminó corractamente al cliente" + cliente;
-        }
-		
-		return "No se pudo eliminar al cliente: " + documento;
-    }
-	
+    @Autowired
+    private ClienteService clienteService;
+
     @GetMapping
-    public ArrayList<Cliente> listarClientes() {
+    public List<Cliente> listar() {
         return clienteService.listarClientes();
     }
 
+    @GetMapping("/{documento}")
+    public Cliente obtener(@PathVariable String documento) {
+        return clienteService.obtenerClientePorDocumento(documento).orElse(null);
+    }
 
-    // Registrar nuevo cliente
     @PostMapping
-    public Cliente registrarCliente(@RequestBody Cliente cliente) {
-        return clienteService.saveCliente(cliente);
+    public Cliente crear(@RequestBody Cliente cliente) {
+        return clienteService.crearCliente(cliente);
     }
 
-    // Actualizar cliente existente
-    @PutMapping("/{id}")
-    public Cliente actualizarCliente(@PathVariable String documento, @RequestBody Cliente cliente) {
-        return clienteService.updateCliente(documento, cliente);
+    @PutMapping("/{documento}")
+    public Cliente actualizar(@PathVariable String documento, @RequestBody Cliente cliente) {
+        return clienteService.actualizarCliente(documento, cliente); 
     }
 
+    @DeleteMapping("/{documento}")
+    public String eliminar(@PathVariable String documento) {
+        boolean eliminado = clienteService.eliminarCliente(documento);
+        if (eliminado) {
+            return "Cliente eliminado: " + documento;
+        } else {
+            return "No se encontró cliente con documento: " + documento;
+        }
+    }
 }

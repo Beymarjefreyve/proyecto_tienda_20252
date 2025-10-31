@@ -1,6 +1,9 @@
 package com.example.demo.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
@@ -9,15 +12,19 @@ import lombok.Data;
 public class Producto {
 	
 	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
     
 	private String nombre;
     
 	private String descripcion;
-    
+
 	private Double precio;
     
-	private Integer tipoId; // CATEGORIA
+	@Column(name = "tipo_id", nullable = false)
+    private Integer tipoId; // CATEGORIA
+	
+	private Integer stock;
 
 	public Integer getId() {
 		return id;
@@ -58,6 +65,15 @@ public class Producto {
 	public void setTipoId(Integer tipoId) {
 		this.tipoId = tipoId;
 	}
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	}
+
 	
 	
 }
